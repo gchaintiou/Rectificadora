@@ -1,0 +1,380 @@
+@charset "utf-8";
+/* CSS Document */
+
+input[type="text"], select {
+   border-radius: 5px;
+   border: 1px solid #999;
+   padding: 2px 3px;
+   font-family: Tahoma, Geneva, sans-serif;
+}
+
+input[type="text"]:hover, select:hover {
+   border: 1px solid #0CF;
+}
+
+input[type="date"], select {
+   border-radius: 5px;
+   border: 1px solid #999;
+   padding: 2px 3px;
+   font-family: Tahoma, Geneva, sans-serif;
+}
+
+input[type="date"]:hover, select:hover {
+   border: 1px solid #0CF;
+}
+
+input[type="button"] {
+   border-radius: 5px;
+   height: 28px;
+   font-family: Tahoma, Geneva, sans-serif;
+   border: 1px solid #999;
+   padding: 0 15px;
+}
+
+input[type="button"]:hover {
+   cursor: pointer;
+   background-color: #EAEAEA;
+}
+
+.message	{
+   width: 100%;
+   font-family: Tahoma;
+	font-size: 14px;
+	font-style: italic;
+   text-align: center;
+	color: #000;
+	font-weight: bold;
+	}
+   
+.nota	{
+	font-family: Tahoma;
+	font-size: 14px;
+	font-style: italic;
+	color: #0F9;
+	font-weight: bold;
+	padding-left: 10%;
+	padding-right: 10%;
+	}
+.pie	{
+	font-family: Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	font-size: 10px;
+	}
+.celda_cuerpo {
+	background-color: #036;
+	border: 1px solid #000;
+}
+.titulo1 {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	color: #0CF;
+	text-decoration: underline;
+	text-align:center;
+}
+.etiqueta1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	color: #0F9;
+}
+.celda_menu {
+	vertical-align:top;
+	border: 1px solid #000;
+}
+.head_std {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 16px;
+	color: #00F;
+	background-color: #0FF;
+	font-weight:600;
+}
+.head_seccion {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 16px;
+	color: #00F;
+	background-color: #FC3;
+	font-weight:600;
+}
+.head_item_std1 {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 95%;
+	color: #03C;
+	background-color: #9FC;
+	text-align: right;
+	font-weight:600;
+}
+.head_item_std2 {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 95%;
+	color: #000;
+	background-color: #CCC;
+	text-align: left;
+}
+.head_item_std3 {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 95%;
+	color: #03C;
+	background-color: #9FC;
+	text-align: center;
+	font-weight:600;
+}
+.gris_claro {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 95%;
+	color: #000;
+	background-color: #EAEAEA;
+}
+.gris_oscuro {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 95%;
+	color: #000;
+	background-color: #C0C0C0;
+}
+
+.tarea_actual{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 95%;
+	color: #00F;
+	background-color: #0F6;
+}
+
+.tarea_prox{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 95%;
+	color: #00F;
+	background-color: #FF6;
+}
+
+.texto_referencia{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 95%;
+	color: #FFF;
+
+}
+
+.cell_over	{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 95%;
+	color: #006;
+	background-color: #FC6;
+}
+
+.subtotal {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 85%;
+	background-color: #0F9;
+	text-align: right;
+	vertical-align: middle;
+	color: #F00;
+	font-weight:600;
+}
+.total {
+	font-family: Tahoma, Geneva, sans-serif;
+	color: #F00;
+	background-color: #0FF;
+	text-align: right;
+	font-weight:600;
+	font-size: 95%;
+}
+.etiqueta2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	color: #0F9;
+	text-align: right;
+	font-weight:600;
+}
+.titulo2 {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	color: #F90;
+}
+.celda_cuerpo_ot {
+	background-color: #66C;
+	border: 1px solid #000;
+}
+.celda_menu_ot {
+	vertical-align:top;
+	background-color: #172047;
+	border: 1px solid #000;
+}
+.warning {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: italic;
+	color: #F00;
+	font-weight: bold;
+}
+
+.A {
+	font-family: Arial, Helvetica, sans-serif;
+	}
+A:link {
+	text-decoration:none;
+	color:#009
+	}
+A:visited {
+	text-decoration:none;
+	color:#333
+	}
+A:active {
+	text-decoration:none;
+	color:#ff0000;
+	}
+A:hover {
+	text-decoration:none;
+	color: #0FF;
+	font-weight:bold
+	}
+.proveedor_head {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 95%;
+	color: #03C;
+	background-color: #9FC;
+	text-align: left;
+	font-weight:600;
+	border: 1px solid #000;
+}
+.proveedor_celda {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 95%;
+	text-align: left;
+	font-weight:600;
+	border: 1px dotted #000;
+	background-color: #99C;
+}
+
+.celda_progreso {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 95%;
+	color: #FFF;
+	background-color: #03F;
+	text-align: right;
+	font-weight:600;
+	border: 1px solid #000;
+}
+<!-- ESTILOS PARA EL FORMATO DE IMPRESION -->
+
+.print_titulo {
+	font-size: 22px;
+	font-style: italic;
+	font-weight: bold;
+	text-align:center;
+}
+
+.print_enc {font-weight: bold}
+
+.print_head_tabla {
+	font-size: 14px;
+	font-style: italic;
+	font-weight: bold;
+}
+
+.print_head_celda {
+	background-color: #A0A0A4;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.print_item {font-size: 10px;}
+
+.print_total_celda {
+	border-top-style: dotted; 
+	border-top-color:#999;
+	font-size: 12px;
+	font-weight: bold;
+	text-align:right;
+}
+
+.print_total {
+	font-size: 14px;
+	font-weight:bold;
+	text-align:right;
+}
+
+.divReciboItemGroup {
+   display: block;
+   clear: both;
+   width: 100%;
+   margin-top: 3px;
+   padding-top: 3px;
+   overflow: auto;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.divReciboItemGroup_print {
+   display: block;
+   clear: both;
+   width: 100%;
+   margin-top: 5px;
+   padding-top: 10px;
+   overflow: auto;
+   font-family: Arial, Helvetica, sans-serif;
+   border-top: 1px #DDD dotted;
+}
+
+.divReciboItemType {
+   display: block;
+   width: 35%;
+   float: left;
+   text-align: left;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.divReciboItemType_print {
+   display: block;
+   width: 40%;
+   float: left;
+   text-align: left;
+   font-family: Arial, Helvetica, sans-serif;
+   font-weight: bold;
+}
+
+.divReciboItemDebe {
+   display: block;
+   width: 20%;
+   margin-top: 3px;
+   float: left;
+   text-align: right;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.divReciboItemHaber {
+   display: block;
+   width: 20%;
+   margin-top: 3px;
+   float: left; 
+   text-align:right;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.divReciboItemSaldo {
+   display: block;
+   width: 20%;
+   margin-top: 3px;
+   float: left;
+   text-align: right;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.divReciboItemRemove {
+   display: block;
+   width: 5%;
+   margin-top: 3px;
+   float: left;
+   text-align: right;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.divReciboItemExtraHdr {
+   display: block;
+   width: 15%;
+   float: left;
+   text-align: right;
+   font-family: Arial, Helvetica, sans-serif;
+   font-weight: bold;
+   font-size: 14px;
+   padding-top: 2px;
+}

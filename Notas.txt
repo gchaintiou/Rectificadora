@@ -1,0 +1,2 @@
+El menu fue realizado con el programa DHTMLMenu.
+	El archivo del Menu se encuentra en Rectificadora/Templates
