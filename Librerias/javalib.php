@@ -3,11 +3,11 @@ if(!defined('JAVALIB'))
 {
 define('JAVALIB', 102);
 ?>
-<script type="text/javascript" src="/rectificadora/Js/num2text.js"></script>
-<link rel="stylesheet" href="/rectificadora/Librerias/dhtmlmodal/windowfiles/dhtmlwindow.css" type="text/css" />
-<script type="text/javascript" src="/rectificadora/Librerias/dhtmlmodal/windowfiles/dhtmlwindow.js"></script>
-<link rel="stylesheet" href="/rectificadora/Librerias/dhtmlmodal/modalfiles/modal.css" type="text/css" />
-<script type="text/javascript" src="/rectificadora/Librerias/dhtmlmodal/modalfiles/modal.js"></script>
+<script type="text/javascript" src="/Rectificadora/Js/num2text.js"></script>
+<link rel="stylesheet" href="/Rectificadora/Librerias/dhtmlmodal/windowfiles/dhtmlwindow.css" type="text/css" />
+<script type="text/javascript" src="/Rectificadora/Librerias/dhtmlmodal/windowfiles/dhtmlwindow.js"></script>
+<link rel="stylesheet" href="/Rectificadora/Librerias/dhtmlmodal/modalfiles/modal.css" type="text/css" />
+<script type="text/javascript" src="/Rectificadora/Librerias/dhtmlmodal/modalfiles/modal.js"></script>
 
 
 <!-####################################################################################-->

@@ -709,6 +709,7 @@ class GR
 		switch($tipo)
 			{
 			case STD:
+                Debugger("Asigno this->campos_enc=ENC_STD=".ENC_STD);
 				$this->campos_enc=ENC_STD;
 				$query = "SELECT pse.nro_pres, pse.desc_pres, pse.nro_motor, pse.lista_mat, pse.descuento, mote.desc_motor FROM `pse` INNER JOIN mote";
 				$query = $query." WHERE pse.nro_pres=$nro AND pse.nro_motor=mote.nro_motor";
@@ -725,6 +726,7 @@ class GR
 				$query = "SELECT * FROM";
 				if($tipo==1)
 					{
+                        Debugger("Asigno this->campos_enc=ENC_CLI=".ENC_CLI);
 					$this->campos_enc=ENC_CLI;
 					$query = $query." pce WHERE nro_pres=$nro";
 					$res = $this->con_sql->Execute($query);
@@ -733,6 +735,7 @@ class GR
 					}
 				else
 					{
+                        Debugger("Asigno this->campos_enc=ENC_OT=".ENC_OT);
 					$this->campos_enc=ENC_OT;
 					$query = $query." ote WHERE nro_ot=$nro";
 					$res = $this->con_sql->Execute($query);
@@ -769,7 +772,8 @@ class GR
 			<tr>
 				<td colspan="2" class="head_std">
 					<?php
-					if($this->campos_enc & 1<<NUM_OT)
+				    //if($this->campos_enc & 1<<NUM_OT)
+                    if($this->campos_enc == ENC_OT)
 						echo "ENCABEZADO DE LA ORDEN DE TRABAJO";
 					else
 						echo "ENCABEZADO DEL PRESUPUESTO";
@@ -777,8 +781,12 @@ class GR
 				</td>
 			</tr>
 			<?php
-			if($this->campos_enc & 1<<NUM_OT)
+            Debugger("this->campos_enc = ".$this->campos_enc.", NUM_OT =".NUM_OT);
+			//if($this->campos_enc & 1<<NUM_OT)
+            //if($this->campos_enc == ENC_OT)
+            if (isset($this->encabezado[NUM_OT]))
 				{
+                    Debugger("Armar encabezado de Orden de trabajo");
 				?>
 				<tr>
 					<td width="30%" class="head_item_std1">Nº OT:</td>
@@ -786,8 +794,12 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<NUM_PRES)
+            else
+                Debugger("No armar encabezado de Orden de Trabajo");
+			//if($this->campos_enc & 1<<NUM_PRES)
+            if(isset($this->encabezado[NUM_PRES]))
 				{
+                    Debugger("Armar encabezado de Presupuesto");
 				?>
 				<tr>
 					<td width="30%" class="head_item_std1">Nº Presupuesto:</td>
@@ -795,7 +807,10 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<DESC_PRES)
+            else
+                Debugger("No armar encabezado de Pruesupesto");
+			//if($this->campos_enc & 1<<DESC_PRES)
+            if(isset($this->encabezado[DESC_PRES]))
 				{
 				?>
 				<tr>
@@ -806,7 +821,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<DESC_MOTOR)
+			//if($this->campos_enc & 1<<DESC_MOTOR)
+            if (isset($this->encabezado[DESC_MOTOR]))
 				{
 				?>
 				<tr>
@@ -815,7 +831,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<CLIENTE)
+			//if($this->campos_enc & 1<<CLIENTE)
+            if (isset($this->encabezado[CLIENTE]))
 				{
 				?>
 				<tr>
@@ -826,7 +843,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<DIRECCION)
+			//if($this->campos_enc & 1<<DIRECCION)
+            if (isset($this->encabezado[DIRECCION]))
 				{
 				?>
 				<tr>
@@ -837,7 +855,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<TELEFONO)
+			//if($this->campos_enc & 1<<TELEFONO)
+            if (isset($this->encabezado[TELEFONO]))
 				{
 				?>
 				<tr>
@@ -848,7 +867,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<LOCALIDAD)
+			//if($this->campos_enc & 1<<LOCALIDAD)
+            if (isset($this->encabezado[LOCALIDAD]))
 				{
 				?>
 				<tr>
@@ -859,7 +879,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<FECHA)
+			//if($this->campos_enc & 1<<FECHA)
+            if (isset($this->encabezado[FECHA]))
 				{
 				?>
 				<tr>
@@ -868,7 +889,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<HORA)
+			//if($this->campos_enc & 1<<HORA)
+            if (isset($this->encabezado[HORA]))
 				{
 				?>
 				<tr>
@@ -877,7 +899,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<LISTA_MAT)
+			//if($this->campos_enc & 1<<LISTA_MAT)
+            if (isset($this->encabezado[LISTA_MOB]))
 				{
 				?>
 				<tr>
@@ -886,7 +909,8 @@ class GR
 				</tr>
 				<?php
 				}
-			if($this->campos_enc & 1<<DESCUENTO)
+			//if($this->campos_enc & 1<<DESCUENTO)
+            if (isset($this->encabezado[DESCUENTO]))
 				{
 				?>
 				<tr>
@@ -896,8 +920,9 @@ class GR
 								else{?> <input type="text" name="descuento" id="descuento" size="40" maxlength="50" value="<?php echo $this->encabezado[DESCUENTO]?>"  onchange="EditarItemEncabezado(<?php echo DESCUENTO?>, <?php echo "'descuento'"?>)"/><?php }?></td>
 				</tr>
 				<?php
-				}
-			if($this->campos_enc & 1<<PRIORIDAD)
+				}            
+			//if($this->campos_enc & 1<<PRIORIDAD)
+            if (isset($this->prioridad))
 				{
 				?>
 				<tr>
@@ -1436,7 +1461,7 @@ class GR
             }
             else {
                //Debugger("Este es el error que marca VSC");
-               //$resRecibos->fields['debe'] = $lastRecibo->debe - $lastRecibo->haber;
+               $resRecibos->fields['debe'] = $lastRecibo->debe - $lastRecibo->haber;
             }
       
             // Busco y Cargo los items de pago de cada recibo
