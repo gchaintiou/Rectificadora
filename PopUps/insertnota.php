@@ -31,29 +31,32 @@ body {
 
 <!-- InstanceBeginEditable name="Editable" -->
 <?php
+Debugger("PopUps\insertnota.php - hacer=$hacer, nota=$nota");
 switch($hacer)
 	{
 	case 0:
 		{
 		?>
-		<div class="titulo2">Ingrese la Nota:</div>
-		<table width="90%" align="center">
-			<tr>
-				<td align="center"><input name="nota" type="text" id="nota" value="<?php echo $nota?>" size="90" maxlength="200" /></td>
-			</tr>
-			<tr>
-				<td align="center">&nbsp;</td>
-			</tr>
-			<tr>
-				<td align="center"><input name="ok" id="ok" value="Aceptar" type="button" onClick="parent.notewin.hide()"/></td>
-			</tr>
-		</table>
-		<?
+            <div class="titulo2">Ingrese la Nota:</div>
+            <table width="90%" align="center">
+                <tr>
+                    <td align="center"><input name="nota" type="text" id="nota" value="<?php echo $nota?>" size="90" maxlength="200" /></td>
+                </tr>
+                <tr>
+                    <td align="center">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td align="center"><input name="ok" id="ok" value="Aceptar" type="button" onClick="parent.notewin.hide()"/></td>
+                </tr>
+            </table>
+		<?php
 		break;
 		}
-		case 1:
-			$user_gr->SetNota($nota);
-			break;
+	case 1:
+        {
+            $user_gr->SetNota($nota);
+            break;
+        }
 	}
 ?>
 <!-- InstanceEndEditable -->

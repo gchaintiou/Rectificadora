@@ -11,6 +11,7 @@ require_once "../Rectificadora/Librerias/funciones.php";
 $user_gr = $_SESSION['user_gr'];
 $nivel = $_GET['nivel'];
 isset($_GET['id_recibo']) ? $id=$_GET['id_recibo'] : $id=0;
+isset($_GET['num_ot']) ? $num_ot=$_GET['num_ot'] : $num_ot=0;
 ?>
 
 <script type="text/javascript" src="./Js/num2text.js"></script>
@@ -24,12 +25,17 @@ isset($_GET['id_recibo']) ? $id=$_GET['id_recibo'] : $id=0;
    </head>
    <body>
    <?php
-   if($id) {   // Recibo de OT
-      $user_gr->ImprimirRecibo($id);
+   if ($num_ot){
+       Debugger("Imprimir todos los recibos de la Orden de trabajo nro. $num_ot");
+       $user_gr->ImprimirAllRecibos($num_ot);
    }
-   else {      // Presupuesto u OT
-      $user_gr->ImprimirPresOT($nivel);
-   }
+   else
+        if($id) {   // Recibo de OT
+            $user_gr->ImprimirRecibo($id,true);
+        }
+        else {      // Presupuesto u OT
+            $user_gr->ImprimirPresOT($nivel);
+        }
       
    ?>
    </body>

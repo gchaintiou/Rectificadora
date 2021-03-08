@@ -205,6 +205,10 @@ function ReciboPrint(id_recibo)  {
    window.open('../imprimir.php?nivel=0&id_recibo='+id_recibo);
    return true;
 }
+function OT_ImprimirTodosLosRecibos(num_ot){
+   window.open('../imprimir.php?nivel=0&num_ot='+num_ot);
+   return true;
+}
 </script>
 
 <!-##################### Se ejecuta cuando se presiona el boton "Editar" ###################-->

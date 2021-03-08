@@ -568,8 +568,9 @@ class GR
 		}
       
    // Presenta Recibo de OT en formato de impresion
-   function ImprimirRecibo($id_recibo) {
-      
+   function ImprimirRecibo($id_recibo,$unico) {
+              // Si viene el Nro de orden de trabajo significa que imprimen todos.
+      Debugger("ImprimirRecibo($id_recibo, $unico)");
       $receipt = $this->GetReceiptByID($id_recibo);
       $resDesc = $this->GetConex()->Execute("SELECT * FROM rec_tipo_item");
       $tipoDesc = array();
@@ -578,18 +579,21 @@ class GR
          $tipoDesc[$resDesc->fields['id_tipo_item']] = $resDesc->fields['descripcion'];
          $resDesc->MoveNext();
       }
-         
-   ?>   
-      <table width="90%" align="center">
-   <tr>
-      <td width="20%" class="head_item_std1">Recibo OT N°:</td>
-      <td width="80" class="head_item_std2"><div id="nro_recibo"><?php echo $receipt->nro_recibo; ?></div></td>
-   </tr>
-   <tr>
-      <td class="head_item_std1">Fecha:</td>
-      <td class="head_item_std2"><div id="date_recibo"><?php echo $receipt->getDateUp()->format('d-m-Y'); ?></div></td>
-   </tr>
-</table>
+    if ($unico) {
+        ?>   
+            <table width="90%" align="center">
+                <tr>
+                    <td width="20%" class="head_item_std1">Recibo OT N°:</td>
+                    <td width="80" class="head_item_std2"><div id="nro_recibo"><?php echo $receipt->nro_recibo; ?></div></td>
+                </tr>
+                <tr>
+                    <td class="head_item_std1">Fecha:</td>
+                    <td class="head_item_std2"><div id="date_recibo"><?php echo $receipt->getDateUp()->format('d-m-Y'); ?></div></td>
+                </tr>
+            </table>
+        <?php
+        } // if $unico
+?>
 <div id="parentItems" style="width: 90%; margin: 10px auto;">
    <div class="head_item_std3" style="float: left; width: 40%; text-align: left; padding: 5px 0;">Item de Pago</div>
    <div class="head_item_std3" style="float: left; width: 20%; text-align: right; padding: 5px 0;">Debe($)</div>
@@ -686,7 +690,26 @@ class GR
       document.getElementById("textoHaber").innerHTML = "SON: "+texto;
    </script>
    <?php
-   }
+   } // ImprimirRecibo()
+
+   function ImprimirAllRecibos($ot_nro){
+       Debugger("grsys.php - ImprimirAllRecibos($ot_nro)");
+        ?>   
+        <table width="90%" align="center">
+            <tr>
+                <td width="20%" class="head_item_std1">Orden de Trabajo N°:</td>
+                <td width="80" class="head_item_std2"><div id="nro_recibo"><?php echo $ot_nro ?></div></td>
+            </tr>
+        </table>
+        <?php
+
+        $allRecibos = $this->GetConex()->Execute("SELECT rece.id_recibo FROM rece WHERE rece.nro_ot = $ot_nro");
+        while(!$allRecibos->EOF) {
+            $id_recibo = $allRecibos->fields['id_recibo'];
+            $this->ImprimirRecibo($id_recibo,false);
+            $allRecibos->MoveNext();
+        }       
+    }
 
    // Localiza y retorna recibo con el $id indicado
    function GetReceiptByID($id) {
@@ -1434,7 +1457,7 @@ class GR
 	function ArmarRECIBOS($nro) {        
 		$this->con_sql = $this->GetConex();
         $lastRecibo = NULL;
-
+        Debugger("ArmarRECIBOS($nro)");
 		if($nro) {
          // Limpio listado de Recibos
          unset($this->recibos);
@@ -1469,7 +1492,7 @@ class GR
             $query = $query." INNER JOIN rec_tipo_item RTI ON RTI.id_tipo_item=RD.id_tipo_item";
             $query = $query." WHERE RD.id_recibo=".$resRecibos->fields['id_recibo'];
             $query = $query." ORDER BY RD.id_item ASC";
-            
+            Debugger($query);
             $res1 = $this->con_sql->Execute($query);
             // Creo el objeto RECIBO y le cargo la info
             $this->recibos[$this->cant_recibo] = RECIBO::Receipt($resRecibos->fields, $res1);
@@ -1483,8 +1506,11 @@ class GR
 	
 	// Muestra los datos de materiales almacenados en la clase
 	function MostrarRECIBOS($nro_ot)  {
+        Debugger("grsys.php - MostrarRECIBOS($nro_ot)");
       ?>
-      <div>&nbsp;</div>
+      <div align="center">
+        <input type="button" onclick="OT_ImprimirTodosLosRecibos(<?php echo $nro_ot ?>);" value="Imprimir Todos los Recibos">
+      </div>
       <table width="80%" align="center">
          <tr>
             <td colspan="7" class="head_std">RESUMEN DE RECIBOS</td>
@@ -2180,6 +2206,7 @@ class ITEM
 
       //------------------------------- FUNCIONES -------------------------------------
       function MostrarResumen($lastOne) {
+          Debugger("MostrarResumen($lastOne)");
          ?>
          <td align="center"><?php echo $this->fecha->format('d-m-Y'); ?></td>
          <td align="center"><?php echo $this->nro_recibo; ?></td>

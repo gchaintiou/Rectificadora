@@ -143,6 +143,7 @@ function MostrarReferencias()
 // Presenta una pantalla para realizar busqueda de presupuestos a cliente
 function PantallaBusqueda($tipo)
 	{
+        Debugger("PantallaBusqueda($tipo)");
 	?>
 	<div class="titulo1" align="center">Complete los Datos Deseados Para la Búsqueda:</div>
 	<div>&nbsp;</div>
@@ -173,6 +174,13 @@ function PantallaBusqueda($tipo)
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
+			<tr>
+				<td class="head_item_std1">Cheque Nro.:</td>
+				<td class="head_item_std2"><input type="text" name="cheque" id="cheque" size="40" maxlength="50"/></td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+
 		</table>
 		<div>&nbsp;</div>
 		<table width="80%" align="center">
@@ -207,18 +215,59 @@ function PantallaBusqueda($tipo)
 	}
 
 //****************************************************************************************************************************************************
+function DeterminarCondicionOT($conex,$nro_ot){
+    $query = "SELECT mob, mat,prioridad FROM ote WHERE nro_ot = $nro_ot";
+    $ote = $conex->Execute($query);
+    
+    $mob = $ote->fields['mob'];
+    $mat = $ote->fields['mat'];
+    $total = $mob + $mat;
+    $query = "SELECT id_recibo FROM rece WHERE nro_ot = $nro_ot";
+    $rece = $conex->Execute($query);
+    $totalPagado = 0;
+    $rece->MoveFirst();
+    While (!$rece->EOF){
+        $id_recibo = $rece->fields['id_recibo'];
+        $query = "SELECT SUM(haber) as pagado FROM recd WHERE id_recibo = $id_recibo";
+        $recd = $conex->Execute($query);
+        $pagado = $recd->fields['pagado'];
+        $totalPagado += $pagado;        
+        $rece->MoveNext();
+    }
+    $diferencia = $total - $totalPagado;
+    Debugger("nro_ot = $nro_ot, mat=$mat, mob=$mob, total=$total, pagado=$totalPagado, diferencia=$diferencia");
+    $CondicionDeuda = "";
+    if ($diferencia > 0)
+        $CondicionDeuda = "CON_DEUDA";
+    else
+        $CondicionDeuda = "SALDADA";
+        
+    $CondicionMO = "";
+    if ($ote->fields['prioridad'] <> 0){
+        $query="SELECT * FROM `otd` WHERE nro_ot = $nro_ot AND item = 0 and fecha_real = '0000-00-00'";
+        $otd = $conex->Execute($query);
+        if (!$otd->EOF)
+            $CondicionMO = "A REALIZAR";
+        else
+            $CondicionMO="FINALIZADA";
+    }
+    else
+        $CondicionMO = "PENDIENTE";
+    return "$CondicionDeuda, $CondicionMO";
+}
 function MostrarBusqueda($conex, $tipo)
 	{
         Debugger("MostarBusqueda(tipo $tipo)");
 	?>
 	<div class="titulo1" align="center">Resultados de la Búsqueda de Presupuestos a Clientes:</div>
 	<div>&nbsp;</div>
-	<table width="80%" align="center">
+	<table width="100%" align="center">
 		<tr>
-			<td width="10%" class="head_item_std3">Número</td>
-			<td width="15%" class="head_item_std3">Fecha</td>
-			<td width="30%" class="head_item_std3">Cliente</td>
-			<td width="35%" class="head_item_std3">Motor</td>
+			<td class="head_item_std3">Número</td>
+			<td class="head_item_std3">Fecha</td>
+			<td class="head_item_std3">Cliente</td>
+			<td class="head_item_std3">Motor</td>
+            <td class="head_item_std3">Estado</td>
 		</tr>
 		<?php
 		// Recupero los datos de los filtros ingresados
@@ -226,28 +275,62 @@ function MostrarBusqueda($conex, $tipo)
 		if(isset($_POST['num_ot']))	$_POST['num_ot'] != "" ? $num_ot=$_POST['num_ot'] : $num_ot=0;
 		$_POST['cliente'] != "" ? $nombre=$_POST['cliente'] : $nombre=NULL;
 		$_POST['motor'] != "" ? $motor = $_POST['motor'] : $motor = NULL;
+        $_POST['cheque'] != "" ? $cheque = $_POST['cheque'] : $cheque = NULL;
 		if($_POST['anio1'] != "" && $_POST['mes1'] != "" && $_POST['dia1'] != "")	$date1 = $_POST['anio1'].'-'.$_POST['mes1'].'-'.$_POST['dia1'];
 		else																								$date1 = NULL;
 		if($_POST['anio2'] != "" && $_POST['mes2'] != "" && $_POST['dia2'] != "")	$date2 = $_POST['anio2'].'-'.$_POST['mes2'].'-'.$_POST['dia2'];
 		else																								$date2 = NULL;
 
 		// Busco los presupuestos que cumplen con los requisitos
-		$res = PRECLI_BuscarPresupuestos($conex, $num_ot, $nombre, $motor, $date1, $date2, $tipo);
+		$res = PRECLI_BuscarPresupuestos($conex, $num_ot, $nombre, $motor,$cheque, $date1, $date2, $tipo);
 
-		// Muestro los presupuestos hallados
+		Debugger("funciones.php - Muestro los presupuestos hallados");
 		$cont=0;
 		while(!$res->EOF)
 			{
 			if($res->fields['nro_std'] != 0)
 				{
+                    //Debugger("res.nro_std = ".$res->fields['nro_std']);
+                $condicion = DeterminarCondicionOT($conex,$res->fields['nro']);
+                $clase="normal";
+                switch ($condicion){
+                    case "SALDADA, FINALIZADA":
+                        $clase="normal";
+                        break;
+                    case "CON_DEUDA, A REALIZAR":
+                        $clase="a_realizar_con_deuda";
+                        break;
+                    case "SALDADA, PENDIENTE":
+                        $clase="saldada_pendiente";
+                        break;
+                    case "CON_DEUDA, FINALIZADA":
+                        $clase="rojo";
+                        break;
+                }
+                if ($condicion == "SALDADA, FINALIZADA"){
+                    $res->MoveNext();
+                    continue;
+                }
+                if($clase !== "normal"){
+                    ?>
+                        <tr class="<?php echo $clase ?>" onMouseOver="this.className='cell_over';" onMouseOut="this.className='<?php echo $clase ?>';">
+                    <?php
+                }
+                else
 				if($cont%2)
 					{?>
-					<tr class="gris_claro" onMouseOver="this.className='cell_over';" onMouseOut="this.className='gris_claro';">	<?php } else {?><tr class="gris_oscuro" onMouseOver="this.className='cell_over';" onMouseOut="this.className='gris_oscuro';">
-					<?php }?>
+					<tr class="gris_claro" onMouseOver="this.className='cell_over';" onMouseOut="this.className='gris_claro';">	<?php } 
+                    else {
+                        ?>
+                        <tr class="gris_oscuro" onMouseOver="this.className='cell_over';" onMouseOut="this.className='gris_oscuro';">
+                        <?php
+                    }
+                    ?>
 					<td align="right"><a href="buscar.php?buscado&nro=<?php echo $res->fields['nro']?>"><?php echo $res->fields['nro']?></a></td>
 					<td align="center"><?php echo $res->fields['fecha']?></td>
 					<td><?php echo $res->fields['nombre'];?></td>
 					<td><?php echo $res->fields['desc_motor'];?></td>
+                    <td><?php echo $condicion; ?></td>
 					</tr>
 				<?php
 				}
@@ -262,10 +345,32 @@ function MostrarBusqueda($conex, $tipo)
 
 //****************************************************************************************************************************************************
 // Busca los presupuestos a partir de los filtros pasados y retorna la busqueda
-function PRECLI_BuscarPresupuestos($conex, $num_ot, $nombre, $motor, $fecha1, $fecha2, $tipo)
+function PRECLI_BuscarPresupuestos($conex, $num_ot, $nombre, $motor,$cheque, $fecha1, $fecha2, $tipo)
 	{
-	if($tipo==CLI)	$query = "SELECT fecha, nombre, desc_motor, nro_pres AS nro, nro_std FROM pce WHERE 1";
-	else				$query = "SELECT fecha, nombre, desc_motor, nro_ot AS nro, nro_std FROM ote WHERE 1";
+    Debugger("funciones.php-PRECLI_BuscarPresupuestos. tipo =$tipo");
+
+	if($tipo==CLI)	
+        $query = "SELECT fecha, nombre, desc_motor, nro_pres AS nro, nro_std FROM pce WHERE 1";
+	else
+        {
+            if ($cheque)
+                {
+                    $query = "SELECT rece.nro_ot FROM recd, rece WHERE recd.nro_operacion = '$cheque' AND rece.id_recibo = recd.id_recibo";
+                    $res = $conex->Execute($query);
+                    if (!$res->EOF)
+                        {                            
+                            $num_ot = $res->fields['nro_ot'];
+                            Debugger("nro_ot = $num_ot");
+                        }  
+                    else
+                        {
+                            Debugger("No encontré ni mierda");
+                            return($res);                  
+                        }
+                }
+            
+            $query = "SELECT fecha, nombre, desc_motor, nro_ot AS nro, nro_std FROM ote WHERE 1";
+        }
 
 	if($num_ot)
 		$query = $query." AND nro_ot=$num_ot";
@@ -273,6 +378,7 @@ function PRECLI_BuscarPresupuestos($conex, $num_ot, $nombre, $motor, $fecha1, $f
 		$query = $query." AND nombre LIKE '%".$nombre."%'";
 	if($motor)
 		$query = $query." AND desc_motor LIKE '%".$motor."%'";
+    
 	if($fecha1 && !$fecha2)
 		$query = $query." AND fecha >= '$fecha1'";
 	if(!$fecha1 && $fecha2)
@@ -284,7 +390,6 @@ function PRECLI_BuscarPresupuestos($conex, $num_ot, $nombre, $motor, $fecha1, $f
 		$query = $query." ORDER BY nro_pres DESC";
 	else
 		$query = $query." ORDER BY nro_ot DESC";
-    Debugger("funciones.php-PRECLI_BuscarPresupuesto. tipo =". $tipo);
     Debugger($query);		
 	return($conex->Execute($query));
 	}
