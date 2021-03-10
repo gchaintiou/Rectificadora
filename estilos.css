@@ -138,11 +138,17 @@ input[type="button"]:hover {
 	background-color: #720d0d;
 }
 
-.a_realizar_con_deuda{
+.con_deuda_a_realizar{
     font-family: Arial, Helvetica, sans-serif;
 	font-size: 95%;
-	color: white;
+	color: black;
 	background-color: #55efc4; 
+}
+.con_deuda_pendiente{
+    font-family: Arial, Helvetica, sans-serif;
+	font-size: 95%;
+	color: black;
+	background-color:#ffeaa7; 
 }
 .saldada_pendiente{
     font-family: Arial, Helvetica, sans-serif;
@@ -273,7 +279,7 @@ A:hover {
 	font-weight:600;
 	border: 1px solid #000;
 }
-<!-- ESTILOS PARA EL FORMATO DE IMPRESION -->
+/* ESTILOS PARA EL FORMATO DE IMPRESION */
 
 .print_titulo {
 	font-size: 22px;

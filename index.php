@@ -5,8 +5,8 @@ require_once "../Rectificadora/Librerias/javalib.php";
 require_once "../Rectificadora/Librerias/funciones.php";
 
 // Rutas
-$_SESSION['address']= "10.0.0.200";
-//$_SESSION['address']= "localhost";
+//$_SESSION['address']= "10.0.0.200";
+$_SESSION['address']= "localhost";
 //$_SESSION['address']= "192.168.0.14";
 $_SESSION['raiz']="http://".$_SESSION['address']."/Rectificadora/";
 $_SESSION['imagenes']="http://".$_SESSION['address']."/Rectificadora/Imagenes";

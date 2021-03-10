@@ -180,7 +180,31 @@ function PantallaBusqueda($tipo)
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
-
+			<tr>
+				<td class="head_item_std1">Deuda:</td>
+				<td class="head_item_std2">    
+                    <select name="condicionDeuda" id="condicionDeuda">
+                        <option value="">&nbsp;</option>
+                        <option value="CON_DEUDA">CON_DEUDA</option>
+                        <option value="SALDADA">SALDADA</option>
+                    </select>
+                </td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="head_item_std1">Mano de Obra:</td>
+				<td class="head_item_std2">    
+                    <select name="condicionMO" id="condicionMO">
+                        <option value="">&nbsp;</option>
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="A_REALIZAR">A REALIZAR</option>
+                        <option value="FINALIZADA">FINALIZADA</option>
+                    </select>
+                </td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
 		</table>
 		<div>&nbsp;</div>
 		<table width="80%" align="center">
@@ -247,20 +271,21 @@ function DeterminarCondicionOT($conex,$nro_ot){
         $query="SELECT * FROM `otd` WHERE nro_ot = $nro_ot AND item = 0 and fecha_real = '0000-00-00'";
         $otd = $conex->Execute($query);
         if (!$otd->EOF)
-            $CondicionMO = "A REALIZAR";
+            $CondicionMO = "A_REALIZAR";
         else
             $CondicionMO="FINALIZADA";
     }
     else
         $CondicionMO = "PENDIENTE";
-    return "$CondicionDeuda, $CondicionMO";
+    return "$CondicionDeuda,$CondicionMO";
 }
 function MostrarBusqueda($conex, $tipo)
 	{
         Debugger("MostarBusqueda(tipo $tipo)");
 	?>
-	<div class="titulo1" align="center">Resultados de la Búsqueda de Presupuestos a Clientes:</div>
-	<div>&nbsp;</div>
+	<div class="titulo1" align="center">Resultados de la Búsqueda de Presupuestos a Clientes:</div>    
+	<div>&nbsp;
+    </div>
 	<table width="100%" align="center">
 		<tr>
 			<td class="head_item_std3">Número</td>
@@ -276,6 +301,8 @@ function MostrarBusqueda($conex, $tipo)
 		$_POST['cliente'] != "" ? $nombre=$_POST['cliente'] : $nombre=NULL;
 		$_POST['motor'] != "" ? $motor = $_POST['motor'] : $motor = NULL;
         $_POST['cheque'] != "" ? $cheque = $_POST['cheque'] : $cheque = NULL;
+        $_POST['condicionDeuda'] != "" ? $findCondicionDeuda = $_POST['condicionDeuda'] : $findCondicionDeuda = NULL;
+        $_POST['condicionMO'] != "" ? $findCondicionMO = $_POST['condicionMO'] : $findCondicionMO = NULL;
 		if($_POST['anio1'] != "" && $_POST['mes1'] != "" && $_POST['dia1'] != "")	$date1 = $_POST['anio1'].'-'.$_POST['mes1'].'-'.$_POST['dia1'];
 		else																								$date1 = NULL;
 		if($_POST['anio2'] != "" && $_POST['mes2'] != "" && $_POST['dia2'] != "")	$date2 = $_POST['anio2'].'-'.$_POST['mes2'].'-'.$_POST['dia2'];
@@ -285,6 +312,10 @@ function MostrarBusqueda($conex, $tipo)
 		$res = PRECLI_BuscarPresupuestos($conex, $num_ot, $nombre, $motor,$cheque, $date1, $date2, $tipo);
 
 		Debugger("funciones.php - Muestro los presupuestos hallados");
+        Debugger("funciones.php - findCondicionDeuda = $findCondicionDeuda");
+        Debugger("funciones.php - findCondicionMO = $findCondicionMO");
+        if ($findCondicionMO)
+            Debugger("Filtro por Condicion de MO = $findCondicionMO");
 		$cont=0;
 		while(!$res->EOF)
 			{
@@ -292,24 +323,39 @@ function MostrarBusqueda($conex, $tipo)
 				{
                     //Debugger("res.nro_std = ".$res->fields['nro_std']);
                 $condicion = DeterminarCondicionOT($conex,$res->fields['nro']);
+                $arrayCondicion = explode(",",$condicion);
+                $CondicionDeuda = $arrayCondicion[0];
+                $CondicionMO = $arrayCondicion[1];
+                Debugger("CondicionDeuda = $CondicionDeuda, CondicionMO = $CondicionMO");
+                if ($findCondicionDeuda && $findCondicionDeuda !== $CondicionDeuda)
+                    {
+                        Debugger("Saltear");
+                        $res->MoveNext();
+                        continue;
+                    }
+                if ($findCondicionMO && $findCondicionMO !== $CondicionMO)
+                    {
+                        Debugger("Saltear");
+                        $res->MoveNext();
+                        continue;
+                    }
                 $clase="normal";
                 switch ($condicion){
-                    case "SALDADA, FINALIZADA":
+                    case "SALDADA,FINALIZADA":
                         $clase="normal";
                         break;
-                    case "CON_DEUDA, A REALIZAR":
-                        $clase="a_realizar_con_deuda";
+                    case "CON_DEUDA,A_REALIZAR":
+                        $clase="con_deuda_a_realizar";
                         break;
-                    case "SALDADA, PENDIENTE":
+                    case "CON_DEUDA,PENDIENTE":
+                        $clase="con_deuda_pendiente";
+                        break;
+                        case "SALDADA,PENDIENTE":
                         $clase="saldada_pendiente";
                         break;
-                    case "CON_DEUDA, FINALIZADA":
+                    case "CON_DEUDA,FINALIZADA":
                         $clase="rojo";
                         break;
-                }
-                if ($condicion == "SALDADA, FINALIZADA"){
-                    $res->MoveNext();
-                    continue;
                 }
                 if($clase !== "normal"){
                     ?>
