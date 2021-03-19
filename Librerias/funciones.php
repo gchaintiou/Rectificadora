@@ -39,29 +39,25 @@ function BotonesDecision($tipo, $pres, $ot)
 	{
 	?>
    <div>&nbsp;</div>
-   <table width="80%" align="center">
-      <tr>
-         <td width="81%" align="right">
-			<?php 
+   <div style="text-align:center;">
+        <?php 
 			if($tipo == CLI)
 			{
-			?>
-			<input type="button" name="ot" value="<?php if($ot) echo "  Ver OT  "; else echo "  Crear OT  ";?>" onClick="PRECLI_ProcesarOT(<?php echo $pres?>, <?php echo $ot?>)"/>
-			<?php 
+		    ?>
+			    <input type="button" name="ot" value="<?php if($ot) echo "  Ver OT  "; else echo "  Crear OT  ";?>" onClick="PRECLI_ProcesarOT(<?php echo $pres?>, <?php echo $ot?>)"/>
+		    <?php 
 			}
-			?>
-			</td>
-         <td width="10%" align="right"><input type="button" name="editar" value="     Editar     " onClick="EditarPresOT(<?php echo $tipo?>, <?php echo $pres?>, <?php echo $ot?>)"/></td>
-			<?php 
+		?>
+        <input type="button" name="editar" value="     Editar     " onClick="EditarPresOT(<?php echo $tipo?>, <?php echo $pres?>, <?php echo $ot?>)"/>
+        <?php 
 			if($tipo != STD)
 			{
 			?>
-         <td width="9%" align="right"><input type="button" name="printver" value="   Imprimir   " onClick="Imprimir(<?php echo "1";?>, <?php echo $pres;?>)"/></td>
+            <input type="button" name="printver" value="   Imprimir   " onClick="Imprimir(<?php echo "1";?>, <?php echo $pres;?>)"/>
 			<?php 
 			}
 			?>
-      </tr>
-   </table>
+   </div>
    <?php
 	}
 

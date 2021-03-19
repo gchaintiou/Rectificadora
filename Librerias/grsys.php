@@ -1483,8 +1483,9 @@ class GR
                $resRecibos->fields['debe'] = $total;
             }
             else {
-               //Debugger("Este es el error que marca VSC");
-               $resRecibos->fields['debe'] = $lastRecibo->debe - $lastRecibo->haber;
+               //Debugger("Este es el error que marca VSC");   
+               if (isset($lastRecibo))            
+                    $resRecibos->fields['debe'] = $lastRecibo->debe - $lastRecibo->haber;
             }
       
             // Busco y Cargo los items de pago de cada recibo
